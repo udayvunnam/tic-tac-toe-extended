@@ -4,7 +4,7 @@ import Board from "./Board";
 class Game extends React.Component {
   constructor(props) {
     super(props);
-    this.size = 4;
+    this.size = 3;
     this.winningLines = getWinningLines(this.size);
 
     this.state = {
@@ -15,7 +15,9 @@ class Game extends React.Component {
         }
       ],
       stepNumber: 0,
-      xIsNext: true
+      xIsNext: true,
+      moves: [],
+      sortAsc: true
     };
   }
 
@@ -27,6 +29,9 @@ class Game extends React.Component {
       return;
     }
     squares[i] = this.state.xIsNext ? "X" : "O";
+
+    const moves = this.getMoves(history);
+
     this.setState({
       history: history.concat([
         {
@@ -35,22 +40,13 @@ class Game extends React.Component {
         }
       ]),
       stepNumber: history.length,
-      xIsNext: !this.state.xIsNext
+      xIsNext: !this.state.xIsNext,
+      moves: moves,
+      sortAsc: this.state.sortAsc
     });
   }
 
-  jumpTo(step) {
-    this.setState({
-      stepNumber: step,
-      xIsNext: step % 2 === 0
-    });
-  }
-
-  render() {
-    const history = this.state.history;
-    const current = history[this.state.stepNumber];
-    const winner = calculateWinner(current.squares, this.winningLines);
-
+  getMoves(history) {
     const moves = history.map((step, move) => {
       const position = step.position;
       const row = Math.floor(position / this.size) + 1;
@@ -64,6 +60,30 @@ class Game extends React.Component {
         </li>
       );
     });
+
+    return this.state.sortAsc ? moves : moves.reverse();
+  }
+
+  jumpTo(step) {
+    this.setState({
+      stepNumber: step,
+      xIsNext: step % 2 === 0
+    });
+  }
+
+  toggleSort() {
+    const moves = this.state.moves.reverse();
+
+    this.setState({
+      moves: moves,
+      sortAsc: !this.state.sortAsc
+    });
+  }
+
+  render() {
+    const history = this.state.history;
+    const current = history[this.state.stepNumber];
+    const winner = calculateWinner(current.squares, this.winningLines);
 
     let status;
     if (winner) {
@@ -84,7 +104,12 @@ class Game extends React.Component {
         </div>
         <div className="game-info">
           <div>{status}</div>
-          <ol>{moves}</ol>
+          <div>
+            <button onClick={() => this.toggleSort()}>
+              Toggle Moves Order
+            </button>
+          </div>
+          <ol>{this.state.moves}</ol>
         </div>
       </div>
     );

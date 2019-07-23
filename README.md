@@ -164,6 +164,35 @@ function getWinningLines(size) {
 <summary>4. Add a toggle button that lets you sort the moves in either ascending or descending order.</summary>
 
 ```javascript
+// add moves and sortAsc properties to state
+this.state = {
+  ....
+  moves: [],
+  sortAsc: true
+  ....
+}
+
+toggleSort() {
+  const moves = this.state.moves.reverse();
+
+  this.setState({
+    moves: moves,
+    sortAsc: !this.state.sortAsc
+  });
+}
+```
+
+```html
+render(){
+  return(
+    <div>
+      <button onClick={() => this.toggleSort()}>
+        Toggle Moves Order
+      </button>
+    </div>
+    <ol>{this.state.moves}</ol>
+  )
+}
 ```
 
 </details>
