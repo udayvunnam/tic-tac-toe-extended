@@ -1,6 +1,9 @@
 ## In this Repo, I have extended react tic-tac-toe game with below improvements
 
-1. Display the location for each move in the format (col, row) in the move history list.
+For more clear understanding Game, Board, Square components are moved to thier own files
+
+<details>
+<summary>1. Display the location for each move in the format (col, row) in the move history list.</summary>
 
 ```javascript
 // calculate and show row and col postions like below in Game.jsx
@@ -12,18 +15,20 @@ const desc = move
   : "Go to game start";
 ```
 
-2. Bold the currently selected item in the move list.
-   We can think of a simple solution with css. but it takes a click even if someone has won the game or if a Square is already filled
+</details>
+
+<details>
+<summary>2. Bold the currently selected item in the move list.</summary>
 
 ```css
+/* We can think of a simple solution with css. but it takes a click even if someone has won the game or if a Square is already filled */
 .square:focus {
   font-weight: bold;
 }
 ```
 
-We should map between the current clicked postion and squate index like below
-
 ```javascript
+//We should map between the current clicked postion and squate index like below
 // Add a new property in state that holds the current position
 this.state = {
   history: [
@@ -68,10 +73,116 @@ this.state = {
 }
 ```
 
-3. Rewrite Board to use two loops to make the squares instead of hardcoding them.
-4. Add a toggle button that lets you sort the moves in either ascending or descending order.
-5. When someone wins, highlight the three squares that caused the win.
-6. When no one wins, display a message about the result being a draw.
+</details>
+
+<details>
+<summary>3. Rewrite Board to use two loops to make the squares instead of hardcoding them.
+</summary>
+
+```javascript
+// In Board.jsx
+renderBoard(size) {
+  const rows = [];
+
+  for (let row = 0; row < size; row++) {
+    const cols = [];
+    for (let col = 0; col < size; col++) {
+      cols.push(
+        <React.Fragment key={col}>
+          {this.renderSquare(row * size + col)}
+        </React.Fragment>
+      );
+    }
+    rows.push(
+      <div key={row} className="board-row">
+        {cols}
+      </div>
+    );
+  }
+
+  return rows;
+}
+
+render() {
+  return <div>{this.renderBoard(this.props.size)}</div>;
+}
+
+// Also we have to idenitify winning moves based on the cell size.
+// In Game.jsx
+function calculateWinner(squares, lines) {
+  for (let i = 0; i < lines.length; i++) {
+    const winningCells = lines[i];
+    const firstCell = winningCells[0];
+
+    const winningMove = winningCells.every(cell => {
+      return squares[firstCell] && squares[cell] === squares[firstCell];
+    });
+
+    if (winningMove) {
+      return squares[firstCell];
+    }
+  }
+  return null;
+}
+
+function getWinningLines(size) {
+  debugger;
+
+  // matcing lines = all cols + all rows + diagnols(2)
+  const lines = Array(size * 2)
+    .fill(null)
+    .map(item => []);
+  let rowLine = 0;
+  let colLine = size;
+
+  for (let i = 0; i < size; i++) {
+    for (let j = 0; j < size; j++) {
+      lines[rowLine].push(i * size + j);
+      lines[colLine].push(i + j * size);
+    }
+    rowLine++;
+    colLine++;
+  }
+
+  const diagonal1 = [0]; //diagonal 1
+  const diagonal2 = [size - 1]; //diagonal 2
+
+  for (let i = 1; i < size; i++) {
+    diagonal1.push(diagonal1[i - 1] + size + 1);
+    diagonal2.push(diagonal2[i - 1] + size - 1);
+  }
+  lines.push(diagonal1);
+  lines.push(diagonal2);
+
+  return lines;
+}
+```
+
+</details>
+
+<details>
+<summary>4. Add a toggle button that lets you sort the moves in either ascending or descending order.</summary>
+
+```javascript
+```
+
+</details>
+
+<details>
+<summary>5. When someone wins, highlight the three squares that caused the win.</summary>
+
+```javascript
+```
+
+</details>
+
+<details>
+<summary>6. When no one wins, display a message about the result being a draw.</summary>
+
+```javascript
+```
+
+</details>
 
 ## Available Scripts
 
