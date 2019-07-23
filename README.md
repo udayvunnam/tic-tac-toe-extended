@@ -1,5 +1,7 @@
-## In this Repo, I have extended react tic-tac-toe game with below improvements
+## Extended tic-tac-toe game from official React docs  
+<img width="354" alt="Screenshot 2019-07-23 at 9 46 02 PM" src="https://user-images.githubusercontent.com/20707504/61729253-6e5f1180-ad94-11e9-9fc3-30aea7ce7dab.png">
 
+Below are the newly added features. Each step has corresponding code. 
 For more clear understanding Game, Board, Square components are moved to thier own files
 
 <details>
