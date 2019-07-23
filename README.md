@@ -185,12 +185,14 @@ toggleSort() {
 ```html
 render(){
   return(
+    ...
     <div>
       <button onClick={() => this.toggleSort()}>
         Toggle Moves Order
       </button>
     </div>
     <ol>{this.state.moves}</ol>
+    ...
   )
 }
 ```
@@ -201,6 +203,36 @@ render(){
 <summary>5. When someone wins, highlight the three squares that caused the win.</summary>
 
 ```javascript
+function calculateWinner(squares, lines) {
+...
+  if (winningMove) {
+    return { winningCells, winner: squares[firstCell] };
+  }
+...
+}
+
+function Square(props) {
+  return (
+    <button
+      className={classNames(
+        "square",
+        { "square-selected": props.selected },
+        { "square-won": props.winningCell }
+      )}
+      onClick={props.onClick}
+    >
+      {props.value}
+    </button>
+  );
+}
+```
+
+```css
+.square-won {
+  font-weight: bold;
+  background-color: rgba(0, 128, 128, 0.33);
+  color: rgb(0, 128, 128);
+}
 ```
 
 </details>
@@ -209,6 +241,19 @@ render(){
 <summary>6. When no one wins, display a message about the result being a draw.</summary>
 
 ```javascript
+render(){
+  return (
+    ...
+    if (winner) {
+      status = "Winner: " + winner;
+    } else if (this.state.stepNumber === this.size * this.size) {
+      status = "Draw";
+    } else {
+      status = "Next player: " + (this.state.xIsNext ? "X" : "O");
+    }
+    ...
+  )
+}
 ```
 
 </details>

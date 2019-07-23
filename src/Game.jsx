@@ -25,9 +25,11 @@ class Game extends React.Component {
     const history = this.state.history.slice(0, this.state.stepNumber + 1);
     const current = history[history.length - 1];
     const squares = current.squares.slice();
-    if (calculateWinner(squares, this.winningLines) || squares[i]) {
+
+    if (calculateWinner(squares, this.winningLines || squares[i])) {
       return;
     }
+
     squares[i] = this.state.xIsNext ? "X" : "O";
 
     const moves = this.getMoves(history);
@@ -83,11 +85,16 @@ class Game extends React.Component {
   render() {
     const history = this.state.history;
     const current = history[this.state.stepNumber];
-    const winner = calculateWinner(current.squares, this.winningLines);
+    const winningMove = calculateWinner(current.squares, this.winningLines);
 
     let status;
-    if (winner) {
-      status = "Winner: " + winner;
+    let winningCells;
+
+    if (winningMove) {
+      winningCells = winningMove.winningCells;
+      status = "Winner: " + winningMove.winner;
+    } else if (this.state.stepNumber === this.size * this.size) {
+      status = "Draw";
     } else {
       status = "Next player: " + (this.state.xIsNext ? "X" : "O");
     }
@@ -100,6 +107,7 @@ class Game extends React.Component {
             position={current.position}
             size={this.size}
             onClick={i => this.handleClick(i)}
+            winningCells={winningCells}
           />
         </div>
         <div className="game-info">
@@ -126,15 +134,13 @@ function calculateWinner(squares, lines) {
     });
 
     if (winningMove) {
-      return squares[firstCell];
+      return { winningCells, winner: squares[firstCell] };
     }
   }
   return null;
 }
 
 function getWinningLines(size) {
-  debugger;
-
   // matcing lines = all cols + all rows + diagnols(2)
   const lines = Array(size * 2)
     .fill(null)

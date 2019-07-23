@@ -9,6 +9,9 @@ class Board extends React.Component {
         value={this.props.squares[i]}
         selected={this.props.position === i}
         onClick={() => this.props.onClick(i)}
+        winningCell={
+          this.props.winningCells && this.props.winningCells.indexOf(i) > -1
+        }
       />
     );
   }

@@ -36,6 +36,12 @@ ul {
   font-weight: bold;
 }
 
+.square-won {
+  font-weight: bold;
+  background-color: rgba(0, 128, 128, 0.33);
+  color: rgb(0, 128, 128);
+}
+
 .square:focus {
   outline: none;
 }
