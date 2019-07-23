@@ -1,4 +1,77 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## In this Repo, I have extended react tic-tac-toe game with below improvements
+
+1. Display the location for each move in the format (col, row) in the move history list.
+
+```javascript
+// calculate and show row and col postions like below in Game.jsx
+const position = step.position;
+const row = Math.floor(position / 3) + 1;
+const col = (position % 3) + 1;
+const desc = move
+  ? `Go to move #${move}. row:${row}, col: ${col}`
+  : "Go to game start";
+```
+
+2. Bold the currently selected item in the move list.
+   We can think of a simple solution with css. but it takes a click even if someone has won the game or if a Square is already filled
+
+```css
+.square:focus {
+  font-weight: bold;
+}
+```
+
+We should map between the current clicked postion and squate index like below
+
+```javascript
+// Add a new property in state that holds the current position
+this.state = {
+  history: [
+    {
+      squares: Array(9).fill(null),
+      position: null
+    }
+  ],
+  stepNumber: 0,
+  xIsNext: true
+};
+```
+
+```html
+// pass the poition from Game --> Board and pass selected boolean value from Board--> Suqare
+
+// In Game.jsx
+<Board
+  squares={current.squares}
+  position={current.position}
+  onClick={i => this.handleClick(i)}
+/>
+
+// In Board.jsx
+<Square
+  value={this.props.squares[i]}
+  selected={this.props.position === i}
+  onClick={() => this.props.onClick(i)}
+/>
+
+// In Square.jsx
+<button
+  className={classNames("square", { "square-selected": props.selected })}
+  onClick={props.onClick}
+    >
+  {props.value}
+</button>
+
+// in index.csss
+.square-selected {
+  font-weight: bold;
+}
+```
+
+3. Rewrite Board to use two loops to make the squares instead of hardcoding them.
+4. Add a toggle button that lets you sort the moves in either ascending or descending order.
+5. When someone wins, highlight the three squares that caused the win.
+6. When no one wins, display a message about the result being a draw.
 
 ## Available Scripts
 
